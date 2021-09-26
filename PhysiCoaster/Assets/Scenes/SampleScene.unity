@@ -530,7 +530,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Biggest pp energy
+  m_Text: Smallest PP energy
 --- !u!222 &1322799025
 CanvasRenderer:
   m_ObjectHideFlags: 0

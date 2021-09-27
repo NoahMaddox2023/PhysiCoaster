@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: e2b6778df2287634bb60ad75d343beef
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Creato Display
+  fontNames:
+  - Creato Display
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 95887c0d42660234dbac51953c99856c, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

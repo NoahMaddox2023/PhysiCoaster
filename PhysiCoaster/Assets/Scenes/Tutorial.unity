@@ -819,7 +819,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1565036992}
-        m_MethodName: StopAllCoroutines
+        m_MethodName: ButtonClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -884,8 +884,8 @@ MonoBehaviour:
   yAxisDescriptionText: {fileID: 1909555887}
   nextButton: {fileID: 1565036989}
   continueButton: {fileID: 557659181}
-  continueButtonGameObject: {fileID: 557659178}
   nextButtonGameObject: {fileID: 1565036987}
+  continueButtonGameObject: {fileID: 557659178}
 --- !u!1 &1767809699
 GameObject:
   m_ObjectHideFlags: 0

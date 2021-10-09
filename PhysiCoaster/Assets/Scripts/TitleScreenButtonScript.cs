@@ -37,10 +37,8 @@ public class TitleScreenButtonScript : MonoBehaviour
         titleScreenButtonGameObject.SetActive(false);
     }
 
-    public void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
+    public void ButtonClick()
+    {     
             counter++;
             if (counter == 1)
             {
@@ -66,6 +64,5 @@ public class TitleScreenButtonScript : MonoBehaviour
                 titleScreenButton.enabled = true;
                 titleScreenButtonGameObject.SetActive(true);
             }
-        }
     }
 }

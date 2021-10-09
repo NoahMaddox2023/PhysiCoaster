@@ -34,15 +34,13 @@ public class NextButtonScript : MonoBehaviour
         continueButtonGameObject.SetActive(false);
     }
 
-    public void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
+    public void ButtonClick()
+    { 
+        counter++;
+        if (counter == 1)
         {
-            counter++;
-            if (counter == 1)
-            {
-                xAxisText.enabled = true;
-            }
+            xAxisText.enabled = true;
+        }
             else if (counter == 2)
             {
                 xAxisDescriptionText.enabled = true;
@@ -58,7 +56,6 @@ public class NextButtonScript : MonoBehaviour
                 nextButtonGameObject.SetActive(false);
                 continueButton.enabled = true;
                 continueButtonGameObject.SetActive(true);
-            }
-        }
+            }   
     }
 }

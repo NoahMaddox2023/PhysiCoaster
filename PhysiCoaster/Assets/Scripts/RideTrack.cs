@@ -33,11 +33,12 @@ public class RideTrack : MonoBehaviour
         {
             move = !move;
         }
-        if (move)
+        if (!brokenTrack && move)
         {
             moveCart();
+            checkTracks();
         }
-        checkTracks();
+        
     }
 
     //this shoots out raycasts from our current position and checks to see if any of the raycasts collide with a  track piece. If it
@@ -50,25 +51,29 @@ public class RideTrack : MonoBehaviour
             //The direction of the current direction that we are currently on in our array
             Vector3 dir = transform.TransformDirection(directions[i]);
 
-
+            int hits = 0;
             //Shoot out a raycast in that specific direction, and out however far away we set in the editor. Can also change the value in here if need be. 
             Physics.Raycast(transform.position, dir, out hit[i], checkDistance);
             if (hit[i].collider != null)
             {
                 //debug the ray so we can see it in the scene, and turn it green if it collides with something
                 Debug.DrawRay(transform.position, dir * hit[i].distance, Color.green);
+                hits += 1;
             }
             else
             {
                 //if we didnt hit anything, keep the raycasts red
                 Debug.DrawRay(transform.position, dir * checkDistance, Color.red);
+                hits -= 1;
             }
-            if(hit == null)
-            {
-                //if the track is not connected and all of the colliders at any point dont get a hit back, broken track turns true. 
-                brokenTrack = true;
-            }
+            //if (hits <= 0)
+            //{
+            //    //if the track is not connected and all of the colliders at any point dont get a hit back, broken track turns true. 
+            //    brokenTrack = true;
+            //}
+            //Debug.Log("Amount of hits, max of 3 min of 0: " + hits);
         }
+        
         if (!brokenTrack)
         {
             //if we're not on a broken track we'll order our hits by the closest one to us, 

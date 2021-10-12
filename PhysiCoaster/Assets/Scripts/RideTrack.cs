@@ -20,8 +20,8 @@ public class RideTrack : MonoBehaviour
         //populate the array with the directions we want to check with raycasts to see if there are blocks in front of us, or below 
         directions = new Vector3[]
         {
-            Vector3.right, //for straight forward
-            Vector3.right + Vector3.down, //for diagonally down
+            Vector3.left, //for straight forward
+            Vector3.left + Vector3.down, //for diagonally down
             Vector3.down // for straight down
         };
     }

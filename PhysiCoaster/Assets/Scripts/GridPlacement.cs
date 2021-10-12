@@ -1,17 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+[System.Serializable]
 public class GridPlacement : MonoBehaviour
 {
     public float gridSize = 1.0f;
-    public GameObject track;
-
+    [SerializeField]
+    public GameObject[] track;
+    public int currentTrack;
     private bool placeMode;
 
     void Start()
     {
         placeMode = true;
+        currentTrack = 0;
     }
 
     void Update()
@@ -42,7 +44,23 @@ public class GridPlacement : MonoBehaviour
         {
             placeMode = false;
             Debug.Log("Destroy Mode enabled.");
+        }else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            currentTrack = 0;
+            Debug.Log("The first track is selected.");
+        }else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            currentTrack = 1;
+            Debug.Log("The second track is selected.");
+
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            currentTrack = 2;
+            Debug.Log("The third track is selected.");
+
+        }
+
     }
 
     private void PlaceTrack(Vector3 nearestPoint)
@@ -54,7 +72,7 @@ public class GridPlacement : MonoBehaviour
             Debug.Log("A track already exists on that tile.");
         } else
         {
-            Instantiate(track, placementPos, Quaternion.identity);
+            Instantiate(track[currentTrack], placementPos, Quaternion.identity);
         }
     }
 

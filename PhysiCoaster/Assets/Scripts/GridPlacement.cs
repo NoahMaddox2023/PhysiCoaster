@@ -76,9 +76,9 @@ public class GridPlacement : MonoBehaviour
     {
         int xCoord = Mathf.RoundToInt(pos.x / gridSize);
         int yCoord = Mathf.RoundToInt(pos.y / gridSize);
-        int zCoord = Mathf.RoundToInt(pos.z / gridSize);
+        //int zCoord = Mathf.RoundToInt(pos.z / gridSize);
 
-        Vector3 result = new Vector3((float)xCoord * gridSize, (float)yCoord * gridSize, (float)zCoord * gridSize);
+        Vector3 result = new Vector3((float)xCoord * gridSize, (float)yCoord * gridSize, 1.5f);
         result += transform.position;
 
         return result;

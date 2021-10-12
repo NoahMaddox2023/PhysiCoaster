@@ -1,12 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 
 public class RideTrack : MonoBehaviour
 {
     public float checkDistance;
     public float speed;
+    public float lerpSpeed;
     public float offset;
     bool brokenTrack;
     Transform lastTrackPosition;
@@ -28,6 +27,7 @@ public class RideTrack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        moveCart();
         checkTracks();
     }
 
@@ -80,7 +80,12 @@ public class RideTrack : MonoBehaviour
     //set a target position for our cart to go to, based on th closest collision to the cart
     void GoToTrack(RaycastHit hitPosition)
     {
-        Vector3 target = new Vector3(hitPosition.transform.position.x, hitPosition.transform.position.y + offset, hitPosition.transform.position.z);
-        transform.position = Vector3.Lerp(transform.position, target, speed * Time.deltaTime);
+        Vector3 target = new Vector3(transform.position.x, hitPosition.transform.position.y + offset, hitPosition.transform.position.z);
+        transform.position = Vector3.Lerp(transform.position, target, lerpSpeed * Time.deltaTime);
+    }
+    void moveCart()
+    {
+        Vector3 move = new Vector3(speed * Time.deltaTime, 0, 0);
+        transform.position += move;
     }
 }

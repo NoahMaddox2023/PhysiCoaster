@@ -7,6 +7,7 @@ public class RideTrack : MonoBehaviour
     public float speed;
     public float lerpSpeed;
     public float offset;
+    bool move = false;
     bool brokenTrack;
     Transform lastTrackPosition;
     Vector3 lastTrackNormal;
@@ -15,6 +16,7 @@ public class RideTrack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log("Press Q to move the cart");
         //populate the array with the directions we want to check with raycasts to see if there are blocks in front of us, or below 
         directions = new Vector3[]
         {
@@ -27,7 +29,14 @@ public class RideTrack : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        moveCart();
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            move = !move;
+        }
+        if (move)
+        {
+            moveCart();
+        }
         checkTracks();
     }
 

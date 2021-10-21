@@ -102,4 +102,20 @@ public class GridPlacement : MonoBehaviour
                 break;
         }
     }
+
+    /*
+    //This method is for debugging only. Uncomment if you need to visualize the grid in the editor. Otherwise, Unity will crash upon running the game a second time.
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+
+        for (int x = 0; x < 20; x++)
+        {
+            for (int y = 0; y < 9; y++)
+            {
+                var point = GetNearestPoint(new Vector3(x, y, 0.0f));
+                Gizmos.DrawSphere(point, 0.1f);
+            }
+        }
+    }*/
 }

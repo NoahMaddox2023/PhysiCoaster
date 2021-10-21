@@ -7,7 +7,8 @@ public class GridPlacement : MonoBehaviour
     public float gridSize = 1.0f;
     [SerializeField]
     public GameObject[] track;
-    public int currentTrack;
+
+    private int currentTrack;
     private bool placeMode;
 
     void Start()
@@ -44,23 +45,7 @@ public class GridPlacement : MonoBehaviour
         {
             placeMode = false;
             Debug.Log("Destroy Mode enabled.");
-        }else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            currentTrack = 0;
-            Debug.Log("The first track is selected.");
-        }else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            currentTrack = 1;
-            Debug.Log("The second track is selected.");
-
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            currentTrack = 2;
-            Debug.Log("The third track is selected.");
-
-        }
-
     }
 
     private void PlaceTrack(Vector3 nearestPoint)
@@ -72,7 +57,7 @@ public class GridPlacement : MonoBehaviour
             Debug.Log("A track already exists on that tile.");
         } else
         {
-            Instantiate(track[currentTrack], placementPos, Quaternion.identity);
+            Instantiate(track[currentTrack], placementPos, track[currentTrack].transform.rotation);
         }
     }
 
@@ -100,5 +85,21 @@ public class GridPlacement : MonoBehaviour
         result += transform.position;
 
         return result;
+    }
+
+    public void EquipTrack(int trackType)
+    {
+        switch (trackType)
+        {
+            case 0:
+                currentTrack = 0;
+                break;
+            case 1:
+                currentTrack = 1;
+                break;
+            case 2:
+                currentTrack = 2;
+                break;
+        }
     }
 }

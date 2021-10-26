@@ -41,21 +41,22 @@ public class NextButtonScript : MonoBehaviour
         {
             xAxisText.enabled = true;
         }
-            else if (counter == 2)
-            {
-                xAxisDescriptionText.enabled = true;
-            }
-            else if (counter == 3)
-            {
-                yAxisText.enabled = true;
-            }
-            else if (counter == 4)
-            {
-                yAxisDescriptionText.enabled = true; 
-                nextButton.enabled = false;
-                nextButtonGameObject.SetActive(false);
-                continueButton.enabled = true;
-                continueButtonGameObject.SetActive(true);
-            }   
+        else if (counter == 2)
+        {
+            xAxisDescriptionText.enabled = true;
+        }
+        else if (counter == 3)
+        {
+            yAxisText.enabled = true;
+        }
+        else if (counter == 4)
+        {
+            yAxisDescriptionText.enabled = true;
+            xAxisDescriptionText.enabled = false;
+            nextButton.enabled = false;
+            nextButtonGameObject.SetActive(false);
+            continueButton.enabled = true;
+            continueButtonGameObject.SetActive(true);
+        }
     }
 }

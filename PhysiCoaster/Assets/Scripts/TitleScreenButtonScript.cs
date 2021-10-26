@@ -55,9 +55,12 @@ public class TitleScreenButtonScript : MonoBehaviour
             else if (counter == 4)
             {
                 yAxisDescriptionText.enabled = true;
+                xAxisDescriptionText.enabled = false;
             }
             else if (counter == 5)
             {
+                yAxisDescriptionText.enabled = false;
+                xAxisDescriptionText.enabled = false;
                 graphDescriptionText.enabled = true;
                 nextButton.enabled = false;
                 nextButtonGameObject.SetActive(false);

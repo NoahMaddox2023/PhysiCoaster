@@ -57,7 +57,7 @@ public class GridPlacement : MonoBehaviour
             Debug.Log("A track already exists on that tile.");
         } else
         {
-            Instantiate(track[currentTrack], placementPos, track[currentTrack].transform.rotation);
+            GameObject rail = Instantiate(track[currentTrack], placementPos, track[currentTrack].transform.rotation);
         }
     }
 

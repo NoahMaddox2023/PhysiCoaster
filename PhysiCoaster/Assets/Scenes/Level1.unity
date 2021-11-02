@@ -993,8 +993,8 @@ MonoBehaviour:
   checkDistance: 5
   speed: 2
   lerpSpeed: 5
-  positionLerpSpeed: 5
-  offset: 0.5
+  positionLerpSpeed: 0.5
+  offset: 0.25
   direction: 0
   rayTime: 0
   madeDestination: 0

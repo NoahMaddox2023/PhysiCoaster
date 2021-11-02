@@ -91,7 +91,11 @@ public class RideTrack : MonoBehaviour
                 if(lastTrackPosition != hit[0].transform)
                 {
                     GoToTrack(hit[0]);
+                }
+                if (madeDestination)
+                {
                     lastTrackPosition = hit[0].transform;
+                    madeDestination = false;
                 }
                 RotateTrack(hit[0]);
                 
@@ -110,9 +114,12 @@ public class RideTrack : MonoBehaviour
     {
         Vector3 target = new Vector3(transform.position.x, hitPosition.transform.position.y + offset, hitPosition.transform.position.z);
         transform.position = Vector3.Lerp(transform.position, target, positionLerpSpeed * Time.deltaTime);
-        
-        
-        Debug.Log("This is the position when going to a track: " + transform.position);
+        if(transform.position == target)
+        {
+            Debug.Log("I have made my destination");
+            madeDestination = true;
+        }
+        //Debug.Log("This is the position when going to a track: " + transform.position);
     }
     void RotateTrack(RaycastHit hitNormal)
     {
@@ -122,8 +129,8 @@ public class RideTrack : MonoBehaviour
     void moveCart()
     {
         Vector3 move = new Vector3(speed * Time.deltaTime, 0, 0);
-       
-        transform.Translate(speed * Time.deltaTime,0,0);
-        Debug.Log("This is the transform when trying to move: " + transform.position);
+        transform.position += transform.right * speed * Time.deltaTime;
+        //transform.Translate(speed * Time.deltaTime,0,0);
+        //Debug.Log("This is the transform when trying to move: " + transform.position);
     }
 }

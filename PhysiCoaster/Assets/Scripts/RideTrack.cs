@@ -6,7 +6,12 @@ public class RideTrack : MonoBehaviour
     public float checkDistance;
     public float speed;
     public float lerpSpeed;
+    public float positionLerpSpeed;
     public float offset;
+    public float direction;
+    public float rayTime;
+    public bool madeDestination;
+    public GameObject cart;
     bool move = false;
     bool brokenTrack;
     Transform lastTrackPosition;
@@ -24,6 +29,7 @@ public class RideTrack : MonoBehaviour
             Vector3.right + Vector3.down, //for diagonally down
             Vector3.down // for straight down
         };
+        rayTime = 0;
     }
 
     // Update is called once per frame
@@ -37,6 +43,8 @@ public class RideTrack : MonoBehaviour
         {
             moveCart();
             checkTracks();
+            
+            
         }
         
     }
@@ -80,9 +88,14 @@ public class RideTrack : MonoBehaviour
             hit = hit.ToList().Where(h => h.collider != null).OrderBy(h => h.distance).ToArray();
             if(hit.Length > 0)
             {
-                GoToTrack(hit[0]);
+                if(lastTrackPosition != hit[0].transform)
+                {
+                    GoToTrack(hit[0]);
+                    lastTrackPosition = hit[0].transform;
+                }
                 RotateTrack(hit[0]);
-                //lastTrackPosition = hit[0].transform;
+                
+                
                 //lastTrackNormal = hit[0].normal;
             }
         }
@@ -96,7 +109,10 @@ public class RideTrack : MonoBehaviour
     void GoToTrack(RaycastHit hitPosition)
     {
         Vector3 target = new Vector3(transform.position.x, hitPosition.transform.position.y + offset, hitPosition.transform.position.z);
-        transform.position = Vector3.Lerp(transform.position, target, lerpSpeed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, target, positionLerpSpeed * Time.deltaTime);
+        
+        
+        Debug.Log("This is the position when going to a track: " + transform.position);
     }
     void RotateTrack(RaycastHit hitNormal)
     {
@@ -106,6 +122,8 @@ public class RideTrack : MonoBehaviour
     void moveCart()
     {
         Vector3 move = new Vector3(speed * Time.deltaTime, 0, 0);
-        transform.position += transform.right * Time.deltaTime * speed;
+       
+        transform.Translate(speed * Time.deltaTime,0,0);
+        Debug.Log("This is the transform when trying to move: " + transform.position);
     }
 }

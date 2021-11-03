@@ -64,6 +64,7 @@ public class RideTrack : MonoBehaviour
             Physics.Raycast(transform.position, dir, out hit[i], checkDistance);
             if (hit[i].collider != null)
             {
+                
                 //debug the ray so we can see it in the scene, and turn it green if it collides with something
                 Debug.DrawRay(transform.position, dir * hit[i].distance, Color.green);
                 hits += 1;

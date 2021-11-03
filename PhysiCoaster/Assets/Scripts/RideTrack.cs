@@ -1,4 +1,6 @@
 ﻿using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RideTrack : MonoBehaviour
@@ -17,7 +19,9 @@ public class RideTrack : MonoBehaviour
     Transform lastTrackPosition;
     Vector3 lastTrackNormal;
     Vector3[] directions;
+    Vector3[] downDirection;
     RaycastHit[] hit;
+    RaycastHit[] downHit;
     // Start is called before the first frame update
     void Start()
     {
@@ -29,9 +33,53 @@ public class RideTrack : MonoBehaviour
             Vector3.right + Vector3.down, //for diagonally down
             Vector3.down // for straight down
         };
+        downDirection = new Vector3[]
+        {
+            Vector3.down
+        };
         rayTime = 0;
     }
+    /*
+    IEnumerator horizontalTrackSpeedChange(float seconds)
+    {
+        float counter = seconds; 
+        while (counter > 0f)
+        {
+            yield return new WaitForSeconds(1f);
+            counter--;
+        }
+        speed -= .5f;
+        if (speed < 0)
+        {
+            speed = 0;
+        }
+    }
+    IEnumerator inclineTrackSpeedChange(float seconds)
+    {
+        float counter = seconds;
+        while (counter > 0f)
+        {
+            yield return new WaitForSeconds(1f);
+            counter--;
+        }
+        speed -= 2;
+    }
 
+    IEnumerator declineTrackSpeedChange(float seconds)
+    {
+        float counter = seconds;
+        while (counter > 0f)
+        {
+            yield return new WaitForSeconds(.001f);
+            counter--;
+        }
+        speed += 1;
+        if (speed > 5)
+        {
+            speed = 0;
+        }
+    }
+    */
     // Update is called once per frame
     void Update()
     {
@@ -54,6 +102,40 @@ public class RideTrack : MonoBehaviour
     void checkTracks()
     {
         hit = new RaycastHit[directions.Length];
+        downHit = new RaycastHit[downDirection.Length];
+        for (int i = 0; i < downDirection.Length; i++)
+        {
+            Vector3 dir = transform.TransformDirection(downDirection[i]);
+            Physics.Raycast(transform.position, dir, out downHit[i], checkDistance);
+            if (downHit[i].collider != null)
+            {
+                if (downHit[i].transform.CompareTag("HorizontalTrack"))
+                {
+                    speed -= .00075f;
+                    if (speed < 0)
+                    {
+                        speed = 0;
+                    }
+                }
+                else if (downHit[i].transform.CompareTag("InclineTrack"))
+                {
+                    speed -= .0025f;
+                    if (speed < 0)
+                    {
+                        speed = 0;
+                    }
+                }
+                else if (downHit[i].transform.CompareTag("DeclineTrack"))
+                {
+                    Debug.Log("Going downhill");
+                    speed += .00075f;
+                    if (speed > 5)
+                    {
+                        speed = 0;
+                    }
+                }
+            }
+        }
         for (int i = 0; i < directions.Length; i++)
         {
             //The direction of the current direction that we are currently on in our array
@@ -68,6 +150,7 @@ public class RideTrack : MonoBehaviour
                 //debug the ray so we can see it in the scene, and turn it green if it collides with something
                 Debug.DrawRay(transform.position, dir * hit[i].distance, Color.green);
                 hits += 1;
+                
             }
             else
             {
@@ -75,6 +158,7 @@ public class RideTrack : MonoBehaviour
                 Debug.DrawRay(transform.position, dir * checkDistance, Color.red);
                 hits -= 1;
             }
+
             //if (hits <= 0)
             //{
             //    //if the track is not connected and all of the colliders at any point dont get a hit back, broken track turns true. 
@@ -108,7 +192,10 @@ public class RideTrack : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        Debug.Log("Speed is: " + speed);
     }
+
 
     //set a target position for our cart to go to, based on th closest collision to the cart
     void GoToTrack(RaycastHit hitPosition)
@@ -129,8 +216,17 @@ public class RideTrack : MonoBehaviour
     }
     void moveCart()
     {
-        Vector3 move = new Vector3(speed * Time.deltaTime, 0, 0);
-        transform.position += transform.right * speed * Time.deltaTime;
+        if (speed > 0)
+        {
+            Vector3 move = new Vector3(speed * Time.deltaTime, 0, 0);
+            transform.position += transform.right * speed * Time.deltaTime;
+        }
+        else
+        {
+            Vector3 move = new Vector3(-speed * Time.deltaTime, 0, 0);
+            transform.position -= transform.right * speed * Time.deltaTime;
+        }
+        
         //transform.Translate(speed * Time.deltaTime,0,0);
         //Debug.Log("This is the transform when trying to move: " + transform.position);
     }

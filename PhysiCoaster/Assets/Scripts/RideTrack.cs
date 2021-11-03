@@ -106,7 +106,7 @@ public class RideTrack : MonoBehaviour
         for (int i = 0; i < downDirection.Length; i++)
         {
             Vector3 dir = transform.TransformDirection(downDirection[i]);
-            Physics.Raycast(transform.position, dir, out downHit[i], checkDistance);
+            Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), dir, out downHit[i], checkDistance);
             if (downHit[i].collider != null)
             {
                 if (downHit[i].transform.CompareTag("HorizontalTrack"))

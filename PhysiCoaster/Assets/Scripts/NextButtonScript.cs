@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class NextButtonScript : MonoBehaviour
@@ -33,23 +34,22 @@ public class NextButtonScript : MonoBehaviour
         continueButton.enabled = false;
         continueButtonGameObject.SetActive(false);
     }
-
+    
     public void ButtonClick()
     { 
-        counter++;
-        if (counter == 1)
+        if (xAxisText.enabled == false && xAxisDescriptionText.enabled == false && yAxisText.enabled == false && yAxisDescriptionText.enabled == false && nextButton.enabled == true && continueButton.enabled == false)
         {
             xAxisText.enabled = true;
         }
-        else if (counter == 2)
+        else if (xAxisText.enabled == true && xAxisDescriptionText.enabled == false && yAxisText.enabled == false && yAxisDescriptionText.enabled == false && nextButton.enabled == true && continueButton.enabled == false)
         {
             xAxisDescriptionText.enabled = true;
         }
-        else if (counter == 3)
+        else if (xAxisText.enabled == true && xAxisDescriptionText.enabled == true && yAxisText.enabled == false && yAxisDescriptionText.enabled == false && nextButton.enabled == true && continueButton.enabled == false)
         {
             yAxisText.enabled = true;
         }
-        else if (counter == 4)
+        else if (xAxisText.enabled == true && xAxisDescriptionText.enabled == true && yAxisText.enabled == true && yAxisDescriptionText.enabled == false && nextButton.enabled == true && continueButton.enabled == false)
         {
             yAxisDescriptionText.enabled = true;
             xAxisDescriptionText.enabled = false;
@@ -57,6 +57,36 @@ public class NextButtonScript : MonoBehaviour
             nextButtonGameObject.SetActive(false);
             continueButton.enabled = true;
             continueButtonGameObject.SetActive(true);
+        }        
+    }
+    public void BackClick()
+    {
+        if (xAxisText.enabled == false && xAxisDescriptionText.enabled == false && yAxisText.enabled == false && yAxisDescriptionText.enabled == false && nextButton.enabled == true && continueButton.enabled == false)
+        {
+            SceneManager.LoadScene("TitleScreen");
+        }
+        else if (xAxisText.enabled == true && xAxisDescriptionText.enabled == false && yAxisText.enabled == false && yAxisDescriptionText.enabled == false && nextButton.enabled == true && continueButton.enabled == false)
+        {
+            xAxisText.enabled = false;
+        }
+        else if (xAxisText.enabled == true && xAxisDescriptionText.enabled == true && yAxisText.enabled == false && yAxisDescriptionText.enabled == false && nextButton.enabled == true && continueButton.enabled == false)
+        {
+            xAxisDescriptionText.enabled = false;
+        }
+        else if (xAxisText.enabled == true && xAxisDescriptionText.enabled == true && yAxisText.enabled == true && yAxisDescriptionText.enabled == false && nextButton.enabled == true && continueButton.enabled == false)
+        {
+            yAxisText.enabled = false;
+        }
+        if (xAxisText.enabled == true && xAxisDescriptionText.enabled == false && yAxisText.enabled == true && yAxisDescriptionText.enabled == true && nextButton.enabled == false && continueButton.enabled == true)
+        {
+            yAxisDescriptionText.enabled = false;
+            xAxisDescriptionText.enabled = true;
+            yAxisText.enabled = true;
+            nextButtonGameObject.SetActive(true);
+            nextButton.enabled = true;
+            continueButtonGameObject.SetActive(false);
+            continueButton.enabled = false;        
         }
     }
+
 }

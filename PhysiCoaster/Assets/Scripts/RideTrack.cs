@@ -12,6 +12,10 @@ public class RideTrack : MonoBehaviour
     public float offset;
     public float direction;
     public float rayTime;
+    public float gravity;
+    private float velocity;
+    public float coefFriction;
+    public float mass; 
     public bool madeDestination;
     public GameObject cart;
     bool move = false;
@@ -39,100 +43,59 @@ public class RideTrack : MonoBehaviour
         };
         rayTime = 0;
     }
-    /*
-    IEnumerator horizontalTrackSpeedChange(float seconds)
-    {
-        float counter = seconds; 
-        while (counter > 0f)
-        {
-            yield return new WaitForSeconds(1f);
-            counter--;
-        }
-        speed -= .5f;
-        if (speed < 0)
-        {
-            speed = 0;
-        }
-    }
-    IEnumerator inclineTrackSpeedChange(float seconds)
-    {
-        float counter = seconds;
-        while (counter > 0f)
-        {
-            yield return new WaitForSeconds(1f);
-            counter--;
-        }
-        speed -= 2;
-    }
-
-    IEnumerator declineTrackSpeedChange(float seconds)
-    {
-        float counter = seconds;
-        while (counter > 0f)
-        {
-            yield return new WaitForSeconds(.001f);
-            counter--;
-        }
-        speed += 1;
-        if (speed > 5)
-        {
-            speed = 0;
-        }
-    }
-    */
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        velocity -= velocity * Time.deltaTime * coefFriction;
+        transform.position += (transform.right * velocity * Time.deltaTime);
+        Debug.Log("Velocity is: " + velocity);
         if (Input.GetKeyDown(KeyCode.Q))
         {
+            GetComponent<Rigidbody>().velocity = transform.right * speed;
+            //GetComponent<Rigidbody>().useGravity = true;
             move = !move;
         }
         if (!brokenTrack && move)
         {
-            moveCart();
-            checkTracks();
-            
-            
-        }
-        
+            //moveCart();
+            checkTracks();        
+        } 
     }
 
     //this shoots out raycasts from our current position and checks to see if any of the raycasts collide with a  track piece. If it
     // does we'll store the location of that collider and go towards that tracks position using lerp.
     void checkTracks()
     {
+        velocity += gravity * Mathf.Sin(0) / Time.deltaTime;
         hit = new RaycastHit[directions.Length];
-        downHit = new RaycastHit[downDirection.Length];
+        downHit = new RaycastHit[downDirection.Length]; 
         for (int i = 0; i < downDirection.Length; i++)
         {
             Vector3 dir = transform.TransformDirection(downDirection[i]);
-            Physics.Raycast(new Vector3(transform.position.x, transform.position.y + 1f, transform.position.z), dir, out downHit[i], checkDistance);
+            Physics.Raycast(transform.position, dir, out downHit[i], checkDistance);
             if (downHit[i].collider != null)
             {
+                GoToTrack(downHit[i]);
                 if (downHit[i].transform.CompareTag("HorizontalTrack"))
                 {
-                    speed -= .00075f;
-                    if (speed < 0)
-                    {
-                        speed = 0;
-                    }
+                    Debug.Log("Over horizontal");
+                    //transform.position += transform.forward * (gravity * Mathf.Sin(0) / Time.deltaTime) * Time.deltaTime;
+                    transform.rotation = downHit[i].transform.rotation;
+                    break;
                 }
                 else if (downHit[i].transform.CompareTag("InclineTrack"))
                 {
-                    speed -= .0025f;
-                    if (speed < 0)
-                    {
-                        speed = 0;
-                    }
+                    Debug.Log("Going uphill");
+                    velocity += gravity * Mathf.Sin(-45) * Time.deltaTime;
+                    transform.rotation = downHit[i].transform.rotation;
+                    break;
                 }
                 else if (downHit[i].transform.CompareTag("DeclineTrack"))
                 {
                     Debug.Log("Going downhill");
-                    speed += .00075f;
-                    if (speed > 5)
-                    {
-                        speed = 0;
-                    }
+                    velocity += gravity * Mathf.Sin(45) * Time.deltaTime;
+                    transform.rotation = downHit[i].transform.rotation;
+                    break;
                 }
             }
         }
@@ -182,7 +145,7 @@ public class RideTrack : MonoBehaviour
                     lastTrackPosition = hit[0].transform;
                     madeDestination = false;
                 }
-                RotateTrack(hit[0]);
+                //RotateTrack(hit[0]);
                 
                 
                 //lastTrackNormal = hit[0].normal;
@@ -200,8 +163,8 @@ public class RideTrack : MonoBehaviour
     //set a target position for our cart to go to, based on th closest collision to the cart
     void GoToTrack(RaycastHit hitPosition)
     {
-        Vector3 target = new Vector3(transform.position.x, hitPosition.transform.position.y + offset, hitPosition.transform.position.z);
-        transform.position = Vector3.Lerp(transform.position, target, positionLerpSpeed * Time.deltaTime);
+        Vector3 target = new Vector3(transform.position.x, hitPosition.point.y + offset, hitPosition.point.z);
+        transform.position = Vector3.Lerp(transform.position, target, positionLerpSpeed /*Time.deltaTime*/);
         if(transform.position == target)
         {
             Debug.Log("I have made my destination");
@@ -209,6 +172,7 @@ public class RideTrack : MonoBehaviour
         }
         //Debug.Log("This is the position when going to a track: " + transform.position);
     }
+    /*
     void RotateTrack(RaycastHit hitNormal)
     {
         Quaternion rotation = Quaternion.FromToRotation(Vector3.up, hitNormal.normal);
@@ -216,6 +180,7 @@ public class RideTrack : MonoBehaviour
     }
     void moveCart()
     {
+        /*
         if (speed > 0)
         {
             Vector3 move = new Vector3(speed * Time.deltaTime, 0, 0);
@@ -226,8 +191,9 @@ public class RideTrack : MonoBehaviour
             Vector3 move = new Vector3(-speed * Time.deltaTime, 0, 0);
             transform.position -= transform.right * speed * Time.deltaTime;
         }
-        
+        */
         //transform.Translate(speed * Time.deltaTime,0,0);
         //Debug.Log("This is the transform when trying to move: " + transform.position);
-    }
+   // }
+
 }

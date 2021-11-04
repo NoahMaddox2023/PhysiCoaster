@@ -65,9 +65,9 @@ public class GridPlacement : MonoBehaviour
     {
         var destroyPos = GetNearestPoint(nearestPoint);
 
-        if(Physics.CheckBox(destroyPos, new Vector3(0.25f, 0.25f, 0.25f)))
+        if(Physics.CheckBox(destroyPos, new Vector3(0.25f, 1.0f, 0.25f)))
         {
-            Collider[] hits = Physics.OverlapBox(destroyPos, new Vector3(0.25f, 0.25f, 0.25f));
+            Collider[] hits = Physics.OverlapBox(destroyPos, new Vector3(0.25f, 1.0f, 0.25f));
             Destroy(hits[0].gameObject);
         } else
         {

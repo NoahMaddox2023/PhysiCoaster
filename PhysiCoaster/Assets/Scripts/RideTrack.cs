@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class RideTrack : MonoBehaviour
 {
@@ -17,6 +19,9 @@ public class RideTrack : MonoBehaviour
     public float coefFriction;
     public float mass; 
     public bool madeDestination;
+    public Text levelClearText;
+    public Button resultsScreenButton;
+    public GameObject resultsScreenButtonGameObject;
     public GameObject cart;
     bool move = false;
     bool brokenTrack;
@@ -29,6 +34,9 @@ public class RideTrack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        levelClearText.enabled = false;
+        resultsScreenButton.enabled = false;
+        resultsScreenButtonGameObject.SetActive(false);
         Debug.Log("Press Q to move the cart");
         //populate the array with the directions we want to check with raycasts to see if there are blocks in front of us, or below 
         directions = new Vector3[]
@@ -48,18 +56,28 @@ public class RideTrack : MonoBehaviour
     {
         velocity -= velocity * Time.deltaTime * coefFriction;
         transform.position += (transform.right * velocity * Time.deltaTime);
-        Debug.Log("Velocity is: " + velocity);
+        //Debug.Log("Velocity is: " + velocity);
         if (Input.GetKeyDown(KeyCode.Q))
         {
             GetComponent<Rigidbody>().velocity = transform.right * speed;
-            //GetComponent<Rigidbody>().useGravity = true;
             move = !move;
         }
         if (!brokenTrack && move)
         {
             //moveCart();
-            checkTracks();        
+            checkTracks();
         } 
+    }
+
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "FinishLine")
+        {
+            Time.timeScale = 0;
+            levelClearText.enabled = true;
+            resultsScreenButton.enabled = true;
+            resultsScreenButtonGameObject.SetActive(true);
+        }
     }
 
     //this shoots out raycasts from our current position and checks to see if any of the raycasts collide with a  track piece. If it
@@ -79,7 +97,6 @@ public class RideTrack : MonoBehaviour
                 if (downHit[i].transform.CompareTag("HorizontalTrack"))
                 {
                     Debug.Log("Over horizontal");
-                    //transform.position += transform.forward * (gravity * Mathf.Sin(0) / Time.deltaTime) * Time.deltaTime;
                     transform.rotation = downHit[i].transform.rotation;
                     break;
                 }

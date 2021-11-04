@@ -1000,7 +1000,7 @@ MonoBehaviour:
   direction: 0
   rayTime: 0
   gravity: 9.8
-  coefFriction: 0.3
+  coefFriction: 0.1
   mass: 1
   madeDestination: 0
   cart: {fileID: 395652020}

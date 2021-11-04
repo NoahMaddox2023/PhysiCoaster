@@ -51,6 +51,9 @@ public class RideTrack : MonoBehaviour
             Vector3.down
         };
         rayTime = 0;
+
+        //temp fix for Level1 not being able to run via editor
+        brokenTrack = true;
     }
 
     void Update()

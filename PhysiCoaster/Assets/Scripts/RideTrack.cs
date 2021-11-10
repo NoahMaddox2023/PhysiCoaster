@@ -16,9 +16,12 @@ public class RideTrack : MonoBehaviour
     public float rayTime;
     public float gravity;
     private float velocity;
+    private float kinetic;
+    public float realScienceValue;
     public float coefFriction;
     public float mass;
     private bool QKeyPressed;
+    private float time;
     public bool madeDestination;
     public Text levelClearText;
     public Button resultsScreenButton;
@@ -38,6 +41,7 @@ public class RideTrack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        time = 0;
         tallestTrackPosition = new Vector3(0, 0, 0);
         levelClearText.enabled = false;
         resultsScreenButton.enabled = false;
@@ -69,29 +73,47 @@ public class RideTrack : MonoBehaviour
     {
         velocity -= velocity * Time.deltaTime * coefFriction;
         transform.position += (transform.right * velocity * Time.deltaTime);
-        //Debug.Log("Velocity is: " + velocity);
         if (QKeyPressed)
         {
+            time += Time.fixedDeltaTime;
             GetComponent<Rigidbody>().velocity = transform.right * speed;
             move = !move;
+            GameObject[] horizontalTrack = GameObject.FindGameObjectsWithTag("HorizontalTrack");
+            GameObject[] inclineTrack = GameObject.FindGameObjectsWithTag("InclineTrack");
+            GameObject[] declineTrack = GameObject.FindGameObjectsWithTag("DeclineTrack");
+
+            List<GameObject> allTracks = new List<GameObject>();
+            foreach (GameObject g in horizontalTrack)
+            {
+                allTracks.Add(g);
+            }
+            foreach (GameObject g in inclineTrack)
+            {
+                allTracks.Add(g);
+            }
+            foreach (GameObject g in declineTrack)
+            {
+                allTracks.Add(g);
+            }
+
+            for (int i = 0; i < allTracks.Count; i++)
+            {
+                if (tallestTrackPosition.y < allTracks[i].transform.position.y)
+                {
+                    tallestTrackPosition.y = allTracks[i].transform.position.y;
+                }
+            }
+            float potentialAmount = cart.transform.position.y / (tallestTrackPosition.y + 1);
+
+            kinetic = 1 - potentialAmount - (coefFriction * realScienceValue * time);
+            potentialBar.fillAmount = potentialAmount;
+            kineticBar.fillAmount = kinetic;
         }
         if (!brokenTrack && move)
         {
             //moveCart();
             checkTracks();
-        }
-        
-        GameObject[] tallestTrack = GameObject.FindGameObjectsWithTag("HorizontalTrack");
-        for (int i = 0; i < tallestTrack.Length - 1; i++)
-        {
-            if (tallestTrackPosition.y < tallestTrack[i].transform.position.y)
-            {
-                tallestTrackPosition.y = tallestTrack[i].transform.position.y;
-            }
-        }
-        float potentialAmount = cart.transform.position.y / tallestTrackPosition.y;
-        potentialBar.fillAmount = potentialAmount;
-        kineticBar.fillAmount = 1 - potentialAmount;
+        }  
     }
 
     public void OnTriggerEnter(Collider other)

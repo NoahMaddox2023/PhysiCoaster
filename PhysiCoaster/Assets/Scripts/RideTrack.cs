@@ -41,6 +41,7 @@ public class RideTrack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Log(90 - (90 * .3));
         time = 0;
         tallestTrackPosition = new Vector3(0, 0, 0);
         levelClearText.enabled = false;
@@ -71,7 +72,7 @@ public class RideTrack : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        velocity -= velocity * Time.deltaTime * coefFriction;
+        //velocity -= velocity * Time.deltaTime * coefFriction;
         transform.position += (transform.right * velocity * Time.deltaTime);
         if (QKeyPressed)
         {
@@ -131,7 +132,7 @@ public class RideTrack : MonoBehaviour
     // does we'll store the location of that collider and go towards that tracks position using lerp.
     void checkTracks()
     {
-        velocity += gravity * Mathf.Sin(0) / Time.deltaTime;
+        //velocity += gravity * Mathf.Sin(0) / Time.deltaTime;
         hit = new RaycastHit[directions.Length];
         downHit = new RaycastHit[downDirection.Length]; 
         for (int i = 0; i < downDirection.Length; i++)
@@ -141,26 +142,12 @@ public class RideTrack : MonoBehaviour
             if (downHit[i].collider != null)
             {
                 GoToTrack(downHit[i]);
-                if (downHit[i].transform.CompareTag("HorizontalTrack"))
-                {
-                    Debug.Log("Over horizontal");
-                    transform.rotation = downHit[i].transform.rotation;
-                    break;
-                }
-                else if (downHit[i].transform.CompareTag("InclineTrack"))
-                {
-                    Debug.Log("Going uphill");
-                    velocity += gravity * Mathf.Sin(-45) * Time.deltaTime;
-                    transform.rotation = downHit[i].transform.rotation;
-                    break;
-                }
-                else if (downHit[i].transform.CompareTag("DeclineTrack"))
-                {
-                    Debug.Log("Going downhill");
-                    velocity += gravity * Mathf.Sin(45) * Time.deltaTime;
-                    transform.rotation = downHit[i].transform.rotation;
-                    break;
-                }
+                //Debug.Log("Decline: " + downHit[i].normal);
+                velocity += gravity * Mathf.Sin(90 - Mathf.Abs(90 * (downHit[i].normal.y))) * Time.deltaTime;
+                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90 - Mathf.Abs(90 * (downHit[i].normal.x) * -1)));
+                Debug.Log("Velocity: " + (downHit[i].normal));
+                Debug.Log("Rotation: " + (90 - (90 * (downHit[i].normal.x) * -1)));
+                break;
             }
         }
         for (int i = 0; i < directions.Length; i++)
@@ -193,14 +180,14 @@ public class RideTrack : MonoBehaviour
             //}
             //Debug.Log("Amount of hits, max of 3 min of 0: " + hits);
         }
-        
+
         if (!brokenTrack)
         {
             //if we're not on a broken track we'll order our hits by the closest one to us, 
             hit = hit.ToList().Where(h => h.collider != null).OrderBy(h => h.distance).ToArray();
-            if(hit.Length > 0)
+            if (hit.Length > 0)
             {
-                if(lastTrackPosition != hit[0].transform)
+                if (lastTrackPosition != hit[0].transform)
                 {
                     GoToTrack(hit[0]);
                 }
@@ -210,8 +197,8 @@ public class RideTrack : MonoBehaviour
                     madeDestination = false;
                 }
                 //RotateTrack(hit[0]);
-                
-                
+
+
                 //lastTrackNormal = hit[0].normal;
             }
         }
@@ -219,8 +206,6 @@ public class RideTrack : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
-        Debug.Log("Speed is: " + speed);
     }
 
 
@@ -231,7 +216,7 @@ public class RideTrack : MonoBehaviour
         transform.position = Vector3.Lerp(transform.position, target, positionLerpSpeed /*Time.deltaTime*/);
         if(transform.position == target)
         {
-            Debug.Log("I have made my destination");
+            //Debug.Log("I have made my destination");
             madeDestination = true;
         }
         //Debug.Log("This is the position when going to a track: " + transform.position);

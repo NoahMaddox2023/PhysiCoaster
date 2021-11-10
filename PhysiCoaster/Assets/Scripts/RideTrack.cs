@@ -17,8 +17,7 @@ public class RideTrack : MonoBehaviour
     public float gravity;
     private float velocity;
     public float coefFriction;
-    public float mass;
-    private bool QKeyPressed;
+    public float mass; 
     public bool madeDestination;
     public Text levelClearText;
     public Button resultsScreenButton;
@@ -55,21 +54,13 @@ public class RideTrack : MonoBehaviour
         //temp fix for Level1 not being able to run via editor
         brokenTrack = true;
     }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            QKeyPressed = !QKeyPressed;
-        }
-    }
     // Update is called once per frame
     void FixedUpdate()
     {
         velocity -= velocity * Time.deltaTime * coefFriction;
         transform.position += (transform.right * velocity * Time.deltaTime);
         //Debug.Log("Velocity is: " + velocity);
-        if (QKeyPressed)
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             GetComponent<Rigidbody>().velocity = transform.right * speed;
             move = !move;

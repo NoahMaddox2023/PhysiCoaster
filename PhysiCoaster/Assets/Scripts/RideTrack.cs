@@ -26,15 +26,19 @@ public class RideTrack : MonoBehaviour
     public GameObject cart;
     bool move = false;
     bool brokenTrack;
+    public Image kineticBar;
+    public Image potentialBar;
     Transform lastTrackPosition;
     Vector3 lastTrackNormal;
     Vector3[] directions;
     Vector3[] downDirection;
+    Vector3 tallestTrackPosition;
     RaycastHit[] hit;
     RaycastHit[] downHit;
     // Start is called before the first frame update
     void Start()
     {
+        tallestTrackPosition = new Vector3(0, 0, 0);
         levelClearText.enabled = false;
         resultsScreenButton.enabled = false;
         resultsScreenButtonGameObject.SetActive(false);
@@ -51,9 +55,6 @@ public class RideTrack : MonoBehaviour
             Vector3.down
         };
         rayTime = 0;
-
-        //temp fix for Level1 not being able to run via editor
-        brokenTrack = true;
     }
 
     void Update()
@@ -78,7 +79,19 @@ public class RideTrack : MonoBehaviour
         {
             //moveCart();
             checkTracks();
-        } 
+        }
+        
+        GameObject[] tallestTrack = GameObject.FindGameObjectsWithTag("HorizontalTrack");
+        for (int i = 0; i < tallestTrack.Length - 1; i++)
+        {
+            if (tallestTrackPosition.y < tallestTrack[i].transform.position.y)
+            {
+                tallestTrackPosition.y = tallestTrack[i].transform.position.y;
+            }
+        }
+        float potentialAmount = cart.transform.position.y / tallestTrackPosition.y;
+        potentialBar.fillAmount = potentialAmount;
+        kineticBar.fillAmount = 1 - potentialAmount;
     }
 
     public void OnTriggerEnter(Collider other)

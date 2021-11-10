@@ -52,7 +52,7 @@ public class GridPlacement : MonoBehaviour
     {
         var placementPos = GetNearestPoint(nearestPoint);
 
-        if (Physics.CheckBox(placementPos, new Vector3(0.25f, 0.25f, 0.25f)))
+        if (Physics.CheckBox(placementPos - new Vector3(0.0f, 0.25f, 0.0f), new Vector3(0.25f, 0.5f, 0.25f)))
         {
             Debug.Log("A track already exists on that tile.");
         } else
@@ -100,6 +100,13 @@ public class GridPlacement : MonoBehaviour
             case 2:
                 currentTrack = 2;
                 break;
+            case 3:
+                currentTrack = 3;
+                break;
+            //Uncomment case 4 when Loop track is implemented.222
+            /*case 4:
+                currentTrack = 4;
+                break;*/
         }
     }
 

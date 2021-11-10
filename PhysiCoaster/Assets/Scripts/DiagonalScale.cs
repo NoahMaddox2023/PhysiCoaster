@@ -9,9 +9,13 @@ public class DiagonalScale : MonoBehaviour
 
     void Start()
     {
-        newScale = transform.localScale;
-        newScale.x = newScale.x * (float)Math.Sqrt(2);
-        transform.localScale = newScale;
+
+        if (this.gameObject.layer != LayerMask.NameToLayer("UI"))
+        {
+            newScale = transform.localScale;
+            newScale.x = newScale.x * (float)Math.Sqrt(2);
+            transform.localScale = newScale;
+        }
     }
 
     

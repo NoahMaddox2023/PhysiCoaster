@@ -143,10 +143,12 @@ public class RideTrack : MonoBehaviour
             {
                 GoToTrack(downHit[i]);
                 //Debug.Log("Decline: " + downHit[i].normal);
-                velocity += gravity * Mathf.Sin(90 - Mathf.Abs(90 * (downHit[i].normal.y))) * Time.deltaTime;
-                transform.rotation = Quaternion.Euler(new Vector3(0, 0, 90 - Mathf.Abs(90 * (downHit[i].normal.x) * -1)));
+                velocity += gravity * Mathf.Sin(-1 * (90 - (90 * (downHit[i].normal.x)) - 90)) * Time.deltaTime ;
+                transform.up = downHit[i].normal;
+                //transform.rotation = Quaternion.Euler(new Vector3(0, 0, (90 - (90 * (downHit[i].normal.x)) - 90)));
                 Debug.Log("Velocity: " + (downHit[i].normal));
-                Debug.Log("Rotation: " + (90 - (90 * (downHit[i].normal.x) * -1)));
+                Debug.Log("Rotation: " + transform.rotation);
+                //Debug.Log("Rotation: " + (90 - (90 * (downHit[i].normal.x)) - 90));
                 break;
             }
         }

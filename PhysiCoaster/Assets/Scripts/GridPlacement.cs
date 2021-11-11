@@ -103,10 +103,9 @@ public class GridPlacement : MonoBehaviour
             case 3:
                 currentTrack = 3;
                 break;
-            //Uncomment case 4 when Loop track is implemented.222
-            /*case 4:
+            case 4:
                 currentTrack = 4;
-                break;*/
+                break;
         }
     }
 

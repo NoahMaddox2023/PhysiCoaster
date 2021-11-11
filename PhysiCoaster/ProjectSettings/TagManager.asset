@@ -9,6 +9,7 @@ TagManager:
   - DeclineTrack
   - InclineTrack
   - FinishLine
+  - StartingTrack
   layers:
   - Default
   - TransparentFX

@@ -67,17 +67,19 @@ public class RideTrack : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             QKeyPressed = !QKeyPressed;
+            //GetComponent<Rigidbody>().AddForce(transform.right * speed);
+            //GetComponent<Rigidbody>().velocity = transform.right * speed;
         }
     }
     // Update is called once per frame
     void FixedUpdate()
     {
-        //velocity -= velocity * Time.deltaTime * coefFriction;
+        velocity -= velocity * Time.deltaTime * coefFriction;
         transform.position += (transform.right * velocity * Time.deltaTime);
         if (QKeyPressed)
         {
             time += Time.fixedDeltaTime;
-            GetComponent<Rigidbody>().velocity = transform.right * speed;
+            
             move = !move;
             GameObject[] horizontalTrack = GameObject.FindGameObjectsWithTag("HorizontalTrack");
             GameObject[] inclineTrack = GameObject.FindGameObjectsWithTag("InclineTrack");
@@ -104,7 +106,7 @@ public class RideTrack : MonoBehaviour
                     tallestTrackPosition.y = allTracks[i].transform.position.y;
                 }
             }
-            float potentialAmount = cart.transform.position.y / (tallestTrackPosition.y + 1);
+            float potentialAmount = transform.position.y / (tallestTrackPosition.y + 1);
 
             kinetic = 1 - potentialAmount - (coefFriction * realScienceValue * time);
             potentialBar.fillAmount = potentialAmount;
@@ -142,13 +144,9 @@ public class RideTrack : MonoBehaviour
             if (downHit[i].collider != null)
             {
                 GoToTrack(downHit[i]);
-                //Debug.Log("Decline: " + downHit[i].normal);
-                velocity += gravity * Mathf.Sin(-1 * (90 - (90 * (downHit[i].normal.x)) - 90)) * Time.deltaTime ;
+
                 transform.up = downHit[i].normal;
-                //transform.rotation = Quaternion.Euler(new Vector3(0, 0, (90 - (90 * (downHit[i].normal.x)) - 90)));
-                Debug.Log("Velocity: " + (downHit[i].normal));
-                Debug.Log("Rotation: " + transform.rotation);
-                //Debug.Log("Rotation: " + (90 - (90 * (downHit[i].normal.x)) - 90));
+                velocity += mass * gravity * -1 * Mathf.Sin(transform.rotation.z) * Time.deltaTime;
                 break;
             }
         }

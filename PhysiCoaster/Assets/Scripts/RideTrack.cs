@@ -27,6 +27,7 @@ public class RideTrack : MonoBehaviour
     public Button resultsScreenButton;
     public GameObject resultsScreenButtonGameObject;
     public GameObject cart;
+    public GameObject grid;
     bool move = false;
     bool brokenTrack;
     public Image kineticBar;
@@ -41,6 +42,8 @@ public class RideTrack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Time.timeScale = 1;
+        grid.GetComponent<GridPlacement>().enabled = true;
         Debug.Log(90 - (90 * .3));
         time = 0;
         tallestTrackPosition = new Vector3(0, 0, 0);
@@ -127,6 +130,7 @@ public class RideTrack : MonoBehaviour
             levelClearText.enabled = true;
             resultsScreenButton.enabled = true;
             resultsScreenButtonGameObject.SetActive(true);
+            grid.GetComponent<GridPlacement>().enabled = false;
         }
     }
 

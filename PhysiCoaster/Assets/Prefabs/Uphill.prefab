@@ -89,6 +89,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2362799090291035294}
   - component: {fileID: 2917246613962217711}
+  - component: {fileID: 8473562415258627438}
   m_Layer: 0
   m_Name: Uphill
   m_TagString: Untagged
@@ -124,6 +125,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e28bc5a8e4dd4a4c829734e05735006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!65 &8473562415258627438
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3134938469291890212}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: -3, y: 0, z: 0}
 --- !u!1 &3715556680887457055
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,19 +15,30 @@ public class RideTrack : MonoBehaviour
     public float direction;
     public float rayTime;
     public float gravity;
-    private float velocity;
-    private float kinetic;
-    public float realScienceValue;
     public float coefFriction;
     public float mass;
-    private bool QKeyPressed;
-    private float time;
-    public bool madeDestination;
-    public Text levelClearText;
-    public Button resultsScreenButton;
+    public float realScienceValue;
+
     public GameObject resultsScreenButtonGameObject;
     public GameObject cart;
     public GameObject grid;
+
+    public Text levelClearText;
+    public Button resultsScreenButton;
+
+    public bool madeDestination;
+
+    private float velocity;
+    private float kinetic;
+    private float potential;
+    private float time;
+    private float graphTimer;
+
+    private List<float> potentialGraphed, kineticGraphed;
+
+    private bool QKeyPressed;
+
+
     bool move = false;
     bool brokenTrack;
     public Image kineticBar;
@@ -63,6 +74,11 @@ public class RideTrack : MonoBehaviour
             Vector3.down
         };
         rayTime = 0;
+        graphTimer = 0.0f;
+        potentialGraphed = new List<float>();
+        kineticGraphed = new List<float>();
+        DataTransfer.potentialStored.Clear();
+        DataTransfer.kineticStored.Clear();
     }
 
     void Update()
@@ -84,42 +100,32 @@ public class RideTrack : MonoBehaviour
             time += Time.fixedDeltaTime;
             
             move = !move;
-            GameObject[] horizontalTrack = GameObject.FindGameObjectsWithTag("HorizontalTrack");
-            GameObject[] inclineTrack = GameObject.FindGameObjectsWithTag("InclineTrack");
-            GameObject[] declineTrack = GameObject.FindGameObjectsWithTag("DeclineTrack");
+            
+            potential = mass * gravity * transform.position.y;
+            kinetic = 0.5f * mass * velocity * velocity;
 
-            List<GameObject> allTracks = new List<GameObject>();
-            foreach (GameObject g in horizontalTrack)
+            //Change 7.5 if highest point on grid is changed
+            potentialBar.fillAmount = potential / (mass * gravity * 7.5f);
+            kineticBar.fillAmount = kinetic / (mass * gravity * 7.5f);
+
+            if (graphTimer <= 0.0f)
             {
-                allTracks.Add(g);
-            }
-            foreach (GameObject g in inclineTrack)
-            {
-                allTracks.Add(g);
-            }
-            foreach (GameObject g in declineTrack)
-            {
-                allTracks.Add(g);
+                graphTimer = 1.0f;
+
+                StoreEnergy();
             }
 
-            for (int i = 0; i < allTracks.Count; i++)
+            if (resultsScreenButtonGameObject.activeSelf == true)
             {
-                if (tallestTrackPosition.y < allTracks[i].transform.position.y)
-                {
-                    tallestTrackPosition.y = allTracks[i].transform.position.y;
-                }
+                StoreEnergy();
             }
-            float potentialAmount = transform.position.y / (tallestTrackPosition.y + 1);
-
-            kinetic = 1 - potentialAmount - (coefFriction * realScienceValue * time);
-            potentialBar.fillAmount = potentialAmount;
-            kineticBar.fillAmount = kinetic;
         }
+
         if (!brokenTrack && move)
         {
             //moveCart();
             checkTracks();
-        }  
+        }
     }
 
     public void OnTriggerEnter(Collider other)
@@ -249,4 +255,15 @@ public class RideTrack : MonoBehaviour
         //Debug.Log("This is the transform when trying to move: " + transform.position);
    // }
 
+    private void StoreEnergy()
+    {
+        potentialGraphed.Add(potential);
+        kineticGraphed.Add(kinetic);
+    }
+
+    private void SetData()
+    {
+        DataTransfer.potentialStored = potentialGraphed;
+        DataTransfer.kineticStored = kineticGraphed;
+    }
 }

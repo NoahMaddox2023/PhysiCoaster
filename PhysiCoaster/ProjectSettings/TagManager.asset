@@ -10,6 +10,7 @@ TagManager:
   - InclineTrack
   - FinishLine
   - StartingTrack
+  - FailTrigger
   layers:
   - Default
   - TransparentFX

@@ -7,6 +7,41 @@ using UnityEngine.SceneManagement;
 
 public class RideTrack : MonoBehaviour
 {
+    [Header("Button GameObjects")]
+    public GameObject resultsScreenButtonGameObject;
+    public GameObject retryButtonGameObject;
+    public GameObject pauseMenuTitleScreenButtonGameObject;
+    public GameObject pauseMenuRestartButtonGameObject;
+
+    [Header("Cart/Grid GameObjects")]
+    public GameObject cart;
+    public GameObject grid;
+
+    [Header("Text Objects")]
+    public Text levelClearText;
+    public Text levelFailText;
+    public Text pauseText;
+
+    [Header("Button Objects")]
+    public Button retryButton;
+    public Button resultsScreenButton;
+    public Button pauseMenuTitleScreenButton;
+    public Button pauseMenuRestartButton;
+
+    [Header("Booleans")]
+    public bool madeDestination;
+    private bool QKeyPressed;
+    private bool offTrack = false;
+    private bool paused = false; 
+    bool move = false;
+    bool brokenTrack;
+
+    [Header("Floats")]
+    private float velocity;
+    private float kinetic;
+    private float potential;
+    private float time;
+    private float graphTimer; 
     public float checkDistance;
     public float speed;
     public float lerpSpeed;
@@ -19,30 +54,15 @@ public class RideTrack : MonoBehaviour
     public float mass;
     public float realScienceValue;
 
-    public GameObject resultsScreenButtonGameObject;
-    public GameObject cart;
-    public GameObject grid;
-
-    public Text levelClearText;
-    public Button resultsScreenButton;
-
-    public bool madeDestination;
-
-    private float velocity;
-    private float kinetic;
-    private float potential;
-    private float time;
-    private float graphTimer;
-
     private List<float> potentialGraphed, kineticGraphed;
 
-    private bool QKeyPressed;
+    Rigidbody rigidbody;
+    Collider collider;
 
-
-    bool move = false;
-    bool brokenTrack;
+    [Header("Images")]
     public Image kineticBar;
     public Image potentialBar;
+
     Transform lastTrackPosition;
     Vector3 lastTrackNormal;
     Vector3[] directions;
@@ -55,12 +75,28 @@ public class RideTrack : MonoBehaviour
     {
         Time.timeScale = 1;
         grid.GetComponent<GridPlacement>().enabled = true;
-        Debug.Log(90 - (90 * .3));
         time = 0;
         tallestTrackPosition = new Vector3(0, 0, 0);
+
+       
+        retryButton.enabled = false;
+        pauseMenuRestartButton.enabled = false;       
+        pauseMenuTitleScreenButton.enabled = false;
+        resultsScreenButtonGameObject.SetActive(false);
+
+        rigidbody = GetComponent<Rigidbody>();
+        collider = GetComponent<Collider>();
+
+        levelFailText.enabled = false;
+        pauseText.enabled = false;
         levelClearText.enabled = false;
         resultsScreenButton.enabled = false;
+
+        retryButtonGameObject.SetActive(false);
+        pauseMenuRestartButtonGameObject.SetActive(false);
+        pauseMenuTitleScreenButtonGameObject.SetActive(false);
         resultsScreenButtonGameObject.SetActive(false);
+        
         Debug.Log("Press Q to move the cart");
         //populate the array with the directions we want to check with raycasts to see if there are blocks in front of us, or below 
         directions = new Vector3[]
@@ -81,6 +117,21 @@ public class RideTrack : MonoBehaviour
         DataTransfer.kineticStored.Clear();
     }
 
+    IEnumerator TimeForLevel(float seconds)
+    {
+        float counter = seconds;
+        while (counter > 0f)
+        {
+            yield return new WaitForSeconds(1f);
+            counter--;
+        }
+        Time.timeScale = 0;
+        levelFailText.enabled = true;
+        retryButton.enabled = true;
+        retryButtonGameObject.SetActive(true);
+        grid.GetComponent<GridPlacement>().enabled = false;
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Q))
@@ -88,6 +139,33 @@ public class RideTrack : MonoBehaviour
             QKeyPressed = !QKeyPressed;
             //GetComponent<Rigidbody>().AddForce(transform.right * speed);
             //GetComponent<Rigidbody>().velocity = transform.right * speed;
+            StartCoroutine(TimeForLevel(15f));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            paused = !paused;
+            Debug.Log("Paused: " + paused);
+            if (paused == true)
+            {
+                Time.timeScale = 0;
+                pauseText.enabled = true;
+                pauseMenuRestartButton.enabled = true;
+                pauseMenuRestartButtonGameObject.SetActive(true);
+                pauseMenuTitleScreenButton.enabled = true;
+                pauseMenuTitleScreenButtonGameObject.SetActive(true);
+                grid.GetComponent<GridPlacement>().enabled = false;
+            }
+            else
+            {
+                Time.timeScale = 1;
+                pauseText.enabled = false;
+                pauseMenuRestartButton.enabled = false;
+                pauseMenuRestartButtonGameObject.SetActive(false);
+                pauseMenuTitleScreenButton.enabled = false;
+                pauseMenuTitleScreenButtonGameObject.SetActive(false);
+                grid.GetComponent<GridPlacement>().enabled = true;
+            }
         }
     }
     // Update is called once per frame
@@ -138,6 +216,14 @@ public class RideTrack : MonoBehaviour
             resultsScreenButtonGameObject.SetActive(true);
             grid.GetComponent<GridPlacement>().enabled = false;
         }
+        else if (other.gameObject.tag == "FailTrigger")
+        {
+            Time.timeScale = 0;
+            levelFailText.enabled = true;
+            retryButton.enabled = true;
+            retryButtonGameObject.SetActive(true);
+            grid.GetComponent<GridPlacement>().enabled = false;
+        }
     }
 
     //this shoots out raycasts from our current position and checks to see if any of the raycasts collide with a  track piece. If it
@@ -151,13 +237,19 @@ public class RideTrack : MonoBehaviour
         {
             Vector3 dir = transform.TransformDirection(downDirection[i]);
             Physics.Raycast(transform.position, dir, out downHit[i], checkDistance);
-            if (downHit[i].collider != null)
+            if (downHit[i].collider != null && !offTrack)
             {
                 GoToTrack(downHit[i]);
 
                 transform.up = downHit[i].normal;
                 velocity += mass * gravity * -1 * Mathf.Sin(transform.rotation.z) * Time.deltaTime;
                 break;
+            }
+            else
+            {
+                offTrack = true;
+                rigidbody.useGravity = true;
+                GetComponent<UnityEngine.EventSystems.PhysicsRaycaster>().enabled = false;
             }
         }
         for (int i = 0; i < directions.Length; i++)

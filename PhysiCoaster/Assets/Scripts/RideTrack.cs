@@ -35,6 +35,7 @@ public class RideTrack : MonoBehaviour
     private bool paused = false; 
     bool move = false;
     bool brokenTrack;
+    private bool levelNotCleared = true;
 
     [Header("Floats")]
     private float velocity;
@@ -142,7 +143,7 @@ public class RideTrack : MonoBehaviour
             StartCoroutine(TimeForLevel(15f));
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) && levelNotCleared)
         {
             paused = !paused;
             Debug.Log("Paused: " + paused);
@@ -210,6 +211,7 @@ public class RideTrack : MonoBehaviour
     {
         if (other.gameObject.tag == "FinishLine")
         {
+            levelNotCleared = false;
             Time.timeScale = 0;
             levelClearText.enabled = true;
             resultsScreenButton.enabled = true;

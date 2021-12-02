@@ -224,6 +224,8 @@ public class RideTrack : MonoBehaviour
             levelFailText.enabled = true;
             retryButton.enabled = true;
             retryButtonGameObject.SetActive(true);
+            pauseMenuTitleScreenButton.enabled = true;
+            pauseMenuTitleScreenButtonGameObject.SetActive(true);
             grid.GetComponent<GridPlacement>().enabled = false;
         }
     }

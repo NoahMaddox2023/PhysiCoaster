@@ -78,12 +78,21 @@ public class RideTrack : MonoBehaviour
     Vector3 tallestTrackPosition;
     RaycastHit[] hit;
     RaycastHit[] downHit;
+
+    private bool hasDialogue = false;
     // Start is called before the first frame update
     void Start()
     {
         int currentScene = SceneManager.GetActiveScene().buildIndex;
         PlayerPrefs.SetInt("NextLevel", currentScene + 1);
-        duder = GameObject.FindGameObjectWithTag("DialogueHandler").GetComponent<DialogueHandler>();
+        try
+        {
+            duder = GameObject.FindGameObjectWithTag("DialogueHandler").GetComponent<DialogueHandler>();
+        }
+        catch
+        {
+            hasDialogue = false;
+        }
         Time.timeScale = 1;
         grid.GetComponent<GridPlacement>().enabled = true;
         time = 0;
@@ -152,30 +161,60 @@ public class RideTrack : MonoBehaviour
             //GetComponent<Rigidbody>().AddForce(transform.right * speed);
             //GetComponent<Rigidbody>().velocity = transform.right * speed;
         }
-
-        if (Input.GetKeyDown(KeyCode.Escape) && levelNotCleared && duder.isDoneDone)
+        if (hasDialogue)
         {
-            paused = !paused;
-            Debug.Log("Paused: " + paused);
-            if (paused == true)
+            if (Input.GetKeyDown(KeyCode.Escape) && levelNotCleared && duder.isDoneDone)
             {
-                Time.timeScale = 0;
-                pauseText.enabled = true;
-                pauseMenuRestartButton.enabled = true;
-                pauseMenuRestartButtonGameObject.SetActive(true);
-                pauseMenuTitleScreenButton.enabled = true;
-                pauseMenuTitleScreenButtonGameObject.SetActive(true);
-                grid.GetComponent<GridPlacement>().enabled = false;
+                paused = !paused;
+                Debug.Log("Paused: " + paused);
+                if (paused == true)
+                {
+                    Time.timeScale = 0;
+                    pauseText.enabled = true;
+                    pauseMenuRestartButton.enabled = true;
+                    pauseMenuRestartButtonGameObject.SetActive(true);
+                    pauseMenuTitleScreenButton.enabled = true;
+                    pauseMenuTitleScreenButtonGameObject.SetActive(true);
+                    grid.GetComponent<GridPlacement>().enabled = false;
+                }
+                else
+                {
+                    Time.timeScale = 1;
+                    pauseText.enabled = false;
+                    pauseMenuRestartButton.enabled = false;
+                    pauseMenuRestartButtonGameObject.SetActive(false);
+                    pauseMenuTitleScreenButton.enabled = false;
+                    pauseMenuTitleScreenButtonGameObject.SetActive(false);
+                    grid.GetComponent<GridPlacement>().enabled = true;
+                }
             }
-            else
+        }
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Escape) && levelNotCleared)
             {
-                Time.timeScale = 1;
-                pauseText.enabled = false;
-                pauseMenuRestartButton.enabled = false;
-                pauseMenuRestartButtonGameObject.SetActive(false);
-                pauseMenuTitleScreenButton.enabled = false;
-                pauseMenuTitleScreenButtonGameObject.SetActive(false);
-                grid.GetComponent<GridPlacement>().enabled = true;
+                paused = !paused;
+                Debug.Log("Paused: " + paused);
+                if (paused == true)
+                {
+                    Time.timeScale = 0;
+                    pauseText.enabled = true;
+                    pauseMenuRestartButton.enabled = true;
+                    pauseMenuRestartButtonGameObject.SetActive(true);
+                    pauseMenuTitleScreenButton.enabled = true;
+                    pauseMenuTitleScreenButtonGameObject.SetActive(true);
+                    grid.GetComponent<GridPlacement>().enabled = false;
+                }
+                else
+                {
+                    Time.timeScale = 1;
+                    pauseText.enabled = false;
+                    pauseMenuRestartButton.enabled = false;
+                    pauseMenuRestartButtonGameObject.SetActive(false);
+                    pauseMenuTitleScreenButton.enabled = false;
+                    pauseMenuTitleScreenButtonGameObject.SetActive(false);
+                    grid.GetComponent<GridPlacement>().enabled = true;
+                }
             }
         }
     }

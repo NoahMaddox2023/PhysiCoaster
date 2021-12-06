@@ -16,6 +16,8 @@ public class DialogueHandler : MonoBehaviour
     [HideInInspector]
     public int sentenceCount = 0, letterCount = 0;
     private bool nextSentence = false;
+    [HideInInspector]
+    public bool isDoneDone = false;
     private bool isDone = false;
     private bool endOfSentence = false;
     private bool isReadyToStartText = false;
@@ -35,7 +37,7 @@ public class DialogueHandler : MonoBehaviour
         //Debug.Log("Grid script is currently: " + grid.GetComponent<GridPlacement>().enabled);
         if (allowedToStartAgain)
         {
-            if (Input.anyKeyDown)
+            if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Escape))
             {
                 isReadyToStartText = true;
                 allowedToStartAgain = false;
@@ -49,7 +51,7 @@ public class DialogueHandler : MonoBehaviour
         
         if (endOfSentence)
         {
-            if (Input.anyKeyDown)
+            if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Escape))
             {
                 Debug.Log("End of sentence and a key was pressed");
                 nextSentence = true;
@@ -113,7 +115,7 @@ public class DialogueHandler : MonoBehaviour
             string sentence = sentences[i];
             for (int j = 0; j <= sentence.Length; j++)
             {
-                if (Input.anyKeyDown)
+                if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.Escape))
                 {
                     j = sentence.Length;
                     mainText.text = sentence.Substring(0, j);
@@ -277,5 +279,6 @@ public class DialogueHandler : MonoBehaviour
         }
         gameObject.SetActive(false);
         //Time.timeScale = 1;
+        isDoneDone = true;
     }
 }

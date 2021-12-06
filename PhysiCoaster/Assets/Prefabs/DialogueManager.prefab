@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 6631637307078560328}
   m_Layer: 5
   m_Name: DialogueManager
-  m_TagString: Untagged
+  m_TagString: DialogueHandler
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -237,6 +237,7 @@ MonoBehaviour:
   grid: {fileID: 0}
   sentenceCount: 0
   letterCount: 0
+  isDone: 0
 --- !u!1 &6631637307319445308
 GameObject:
   m_ObjectHideFlags: 0

@@ -63,6 +63,8 @@ public class RideTrack : MonoBehaviour
     [Header("Images")]
     public Image kineticBar;
     public Image potentialBar;
+    [HideInInspector]
+    public DialogueHandler duder;
 
     Transform lastTrackPosition;
     Vector3 lastTrackNormal;
@@ -74,6 +76,7 @@ public class RideTrack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        duder = GameObject.FindGameObjectWithTag("DialogueHandler").GetComponent<DialogueHandler>();
         Time.timeScale = 1;
         grid.GetComponent<GridPlacement>().enabled = true;
         time = 0;
@@ -143,7 +146,7 @@ public class RideTrack : MonoBehaviour
             StartCoroutine(TimeForLevel(10f));
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape) && levelNotCleared)
+        if (Input.GetKeyDown(KeyCode.Escape) && levelNotCleared && duder.isDoneDone)
         {
             paused = !paused;
             Debug.Log("Paused: " + paused);

@@ -11,6 +11,9 @@ TagManager:
   - FinishLine
   - StartingTrack
   - FailTrigger
+  - DialogueHandler
+  - KineticEnergy
+  - PotentialEnergy
   layers:
   - Default
   - TransparentFX

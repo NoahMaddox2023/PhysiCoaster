@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using System.IO;
 
 public class UILine : Graphic
 {
     public Vector2Int gridSize;
     public List<Vector2> points;
     public UIGrid grid;
+
+    private string path1, path2;
 
     float width;
     float height;
@@ -72,6 +75,14 @@ public class UILine : Graphic
         vh.AddVert(vertex);
     }
 
+    private void Start()
+    {
+        points.Clear();
+        path1 = Application.dataPath + "/PotentialPoints.txt";
+        path2 = Application.dataPath + "/KineticPoints.txt";
+        ReadFile();
+    }
+
     private void Update()
     {
         if (grid != null)
@@ -81,6 +92,37 @@ public class UILine : Graphic
                 gridSize = grid.gridSize;
                 SetVerticesDirty();
             }
+        }
+    }
+
+    private void ReadFile()
+    {
+        switch (this.gameObject.tag)
+        {
+            case "KineticEnergy":
+                using (StreamReader sr = File.OpenText(path1))
+                {
+                    string s;
+
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        string[] halves = s.Split(',');
+                        points.Add(new Vector2(float.Parse(halves[0]) / 2.0f, float.Parse(halves[1]) / 363.75f * 5));
+                    }
+                }
+                    break;
+            case "PotentialEnergy":
+                using (StreamReader sr = File.OpenText(path2))
+                {
+                    string s;
+
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        string[] halves = s.Split(',');
+                        points.Add(new Vector2(float.Parse(halves[0]) / 2.0f, float.Parse(halves[1]) / 363.75f * 5));
+                    }
+                }
+                break;
         }
     }
 }

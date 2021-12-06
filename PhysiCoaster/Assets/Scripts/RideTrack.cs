@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.IO;
 
 public class RideTrack : MonoBehaviour
 {
@@ -42,7 +43,6 @@ public class RideTrack : MonoBehaviour
     private float kinetic;
     private float potential;
     private float time;
-    private float graphTimer; 
     public float checkDistance;
     public float speed;
     public float lerpSpeed;
@@ -54,8 +54,13 @@ public class RideTrack : MonoBehaviour
     public float coefFriction;
     public float mass;
     public float realScienceValue;
+    private float pointTimer;
+    private float failTimer;
+    private float counter;
 
-    private List<float> potentialGraphed, kineticGraphed;
+    private string path1, path2;
+
+    private List<Vector2> potentialGraphed, kineticGraphed;
 
     Rigidbody rigidbody;
     Collider collider;
@@ -76,10 +81,13 @@ public class RideTrack : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        PlayerPrefs.SetInt("NextLevel", currentScene + 1);
         duder = GameObject.FindGameObjectWithTag("DialogueHandler").GetComponent<DialogueHandler>();
         Time.timeScale = 1;
         grid.GetComponent<GridPlacement>().enabled = true;
         time = 0;
+        pointTimer = 1.0f;
         tallestTrackPosition = new Vector3(0, 0, 0);
 
        
@@ -114,26 +122,25 @@ public class RideTrack : MonoBehaviour
             Vector3.down
         };
         rayTime = 0;
-        graphTimer = 0.0f;
-        potentialGraphed = new List<float>();
-        kineticGraphed = new List<float>();
-        DataTransfer.potentialStored.Clear();
-        DataTransfer.kineticStored.Clear();
-    }
 
-    IEnumerator TimeForLevel(float seconds)
-    {
-        float counter = seconds;
-        while (counter > 0f)
+        path1 = Application.dataPath + "/PotentialPoints.txt";
+        path2 = Application.dataPath + "/KineticPoints.txt";
+
+        if (File.Exists(path1))
         {
-            yield return new WaitForSeconds(1f);
-            counter--;
+            File.Delete(path1);
         }
-        Time.timeScale = 0;
-        levelFailText.enabled = true;
-        retryButton.enabled = true;
-        retryButtonGameObject.SetActive(true);
-        grid.GetComponent<GridPlacement>().enabled = false;
+
+        if (File.Exists(path2))
+        {
+            File.Delete(path2);
+        }
+
+        counter = 1.0f;
+        failTimer = 10.0f;
+
+        potentialGraphed = new List<Vector2>();
+        kineticGraphed = new List<Vector2>();
     }
 
     void Update()
@@ -141,9 +148,9 @@ public class RideTrack : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Q))
         {
             QKeyPressed = !QKeyPressed;
+            AddToLists();
             //GetComponent<Rigidbody>().AddForce(transform.right * speed);
             //GetComponent<Rigidbody>().velocity = transform.right * speed;
-            StartCoroutine(TimeForLevel(10f));
         }
 
         if (Input.GetKeyDown(KeyCode.Escape) && levelNotCleared && duder.isDoneDone)
@@ -179,6 +186,8 @@ public class RideTrack : MonoBehaviour
         transform.position += (transform.right * velocity * Time.deltaTime);
         if (QKeyPressed)
         {
+            TimeForLevel();
+            AddToLists();
             time += Time.fixedDeltaTime;
             
             move = !move;
@@ -189,18 +198,6 @@ public class RideTrack : MonoBehaviour
             //Change 7.5 if highest point on grid is changed
             potentialBar.fillAmount = potential / (mass * gravity * 7.5f);
             kineticBar.fillAmount = kinetic / (mass * gravity * 7.5f);
-
-            if (graphTimer <= 0.0f)
-            {
-                graphTimer = 1.0f;
-
-                StoreEnergy();
-            }
-
-            if (resultsScreenButtonGameObject.activeSelf == true)
-            {
-                StoreEnergy();
-            }
         }
 
         if (!brokenTrack && move)
@@ -220,6 +217,7 @@ public class RideTrack : MonoBehaviour
             resultsScreenButton.enabled = true;
             resultsScreenButtonGameObject.SetActive(true);
             grid.GetComponent<GridPlacement>().enabled = false;
+            SetData();
         }
         else if (other.gameObject.tag == "FailTrigger")
         {
@@ -350,19 +348,63 @@ public class RideTrack : MonoBehaviour
             transform.position -= transform.right * speed * Time.deltaTime;
         }
         */
-        //transform.Translate(speed * Time.deltaTime,0,0);
-        //Debug.Log("This is the transform when trying to move: " + transform.position);
-   // }
+    //transform.Translate(speed * Time.deltaTime,0,0);
+    //Debug.Log("This is the transform when trying to move: " + transform.position);
+    // }
 
-    private void StoreEnergy()
+    private void TimeForLevel()
     {
-        potentialGraphed.Add(potential);
-        kineticGraphed.Add(kinetic);
+        if (levelNotCleared)
+        {
+            failTimer -= Time.fixedDeltaTime;
+
+            if (failTimer <= 0.0f)
+            {
+                Time.timeScale = 0;
+                levelFailText.enabled = true;
+                retryButton.enabled = true;
+                retryButtonGameObject.SetActive(true);
+                grid.GetComponent<GridPlacement>().enabled = false;
+            }
+        }
+    }
+
+    private void AddToLists()
+    {
+        if (levelNotCleared)
+        {
+            pointTimer -= Time.fixedDeltaTime;
+
+            if (pointTimer <= 0.0f)
+            {
+                potentialGraphed.Add(new Vector2(counter, potential));
+                kineticGraphed.Add(new Vector2(counter, kinetic));
+                counter++;
+                pointTimer = 1.0f;
+            }
+        } else if (!levelNotCleared)
+        {
+            potentialGraphed.Add(new Vector2(counter + pointTimer, potential));
+            kineticGraphed.Add(new Vector2(counter + pointTimer, kinetic));
+        }
     }
 
     private void SetData()
     {
-        DataTransfer.potentialStored = potentialGraphed;
-        DataTransfer.kineticStored = kineticGraphed;
+        using (StreamWriter sw = File.CreateText(path1))
+        {
+            for (int i = 0; i < potentialGraphed.Count; i++)
+            {
+                sw.WriteLine(potentialGraphed[i].x.ToString() + "," + potentialGraphed[i].y.ToString());
+            }
+        }
+
+        using (StreamWriter sw = File.CreateText(path2))
+        {
+            for (int i = 0; i < kineticGraphed.Count; i++)
+            {
+                sw.WriteLine(kineticGraphed[i].x.ToString() + "," + kineticGraphed[i].y.ToString());
+            }
+        }
     }
 }

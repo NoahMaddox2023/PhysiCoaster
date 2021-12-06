@@ -459,7 +459,7 @@ GameObject:
   - component: {fileID: 937414063}
   m_Layer: 5
   m_Name: PotentialEnergy
-  m_TagString: Untagged
+  m_TagString: PotentialEnergy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -500,16 +500,12 @@ MonoBehaviour:
   m_RaycastTarget: 1
   gridSize: {x: 5, y: 5}
   points:
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
+  - {x: 0.5, y: 0.5865193}
+  - {x: 1, y: 0.23154117}
+  - {x: 1.5, y: 0.09140567}
+  - {x: 2, y: 0.036084384}
+  - {x: 2.5, y: 1.0894057}
+  - {x: 3, y: 1.1213838}
   grid: {fileID: 695905357}
   thickness: 8.85
 --- !u!222 &937414064
@@ -663,7 +659,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Level 2
+  m_Text: Next Level
 --- !u!222 &1295567488
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -903,7 +899,7 @@ GameObject:
   - component: {fileID: 1703631962}
   m_Layer: 5
   m_Name: KineticEnergy
-  m_TagString: Untagged
+  m_TagString: KineticEnergy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -944,16 +940,12 @@ MonoBehaviour:
   m_RaycastTarget: 1
   gridSize: {x: 5, y: 5}
   points:
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
-  - {x: 0, y: 0}
+  - {x: 0.5, y: 2.817079}
+  - {x: 1, y: 2.817079}
+  - {x: 1.5, y: 2.817079}
+  - {x: 2, y: 2.817079}
+  - {x: 2.5, y: 1.9236096}
+  - {x: 3, y: 0.7964605}
   grid: {fileID: 695905357}
   thickness: 8.85
 --- !u!222 &1703631963
@@ -1216,7 +1208,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1817110198}
-        m_MethodName: LoadLevelTwo
+        m_MethodName: NextScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -36,6 +36,7 @@ public class GridPlacement : MonoBehaviour
             }
         }
 
+        /*
         //Press 1 to switch toggle placing tracks. Press 2 to toggle deleting tracks
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -46,6 +47,19 @@ public class GridPlacement : MonoBehaviour
             placeMode = false;
             Debug.Log("Destroy Mode enabled.");
         }
+        */
+    }
+
+    public void PlaceMode()
+    {
+        placeMode = true;
+        Debug.Log(placeMode);
+    }
+
+    public void DeleteMode()
+    {
+        placeMode = false;
+        Debug.Log(placeMode);
     }
 
     private void PlaceTrack(Vector3 nearestPoint)

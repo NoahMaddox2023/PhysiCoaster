@@ -140,7 +140,7 @@ public class RideTrack : MonoBehaviour
             QKeyPressed = !QKeyPressed;
             //GetComponent<Rigidbody>().AddForce(transform.right * speed);
             //GetComponent<Rigidbody>().velocity = transform.right * speed;
-            StartCoroutine(TimeForLevel(15f));
+            StartCoroutine(TimeForLevel(10f));
         }
 
         if (Input.GetKeyDown(KeyCode.Escape) && levelNotCleared)

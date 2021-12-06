@@ -68,7 +68,7 @@ public class RideTrack : MonoBehaviour
     [Header("Images")]
     public Image kineticBar;
     public Image potentialBar;
-    [HideInInspector]
+    //[HideInInspector]
     public DialogueHandler duder;
 
     Transform lastTrackPosition;

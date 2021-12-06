@@ -88,6 +88,7 @@ public class RideTrack : MonoBehaviour
         try
         {
             duder = GameObject.FindGameObjectWithTag("DialogueHandler").GetComponent<DialogueHandler>();
+            hasDialogue = true;
         }
         catch
         {

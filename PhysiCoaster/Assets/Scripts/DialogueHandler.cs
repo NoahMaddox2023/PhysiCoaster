@@ -107,13 +107,20 @@ public class DialogueHandler : MonoBehaviour
 
     public IEnumerator MakeText(float timeBetweenLetters)
     {
+        yield return null;
         for (int i = 0; i < sentences.Length; i++)
         {
             string sentence = sentences[i];
             for (int j = 0; j <= sentence.Length; j++)
             {
+                if (Input.anyKeyDown)
+                {
+                    j = sentence.Length;
+                    mainText.text = sentence.Substring(0, j);
+                }
                 //Debug.Log("Flag 1 hit");
                 mainText.text = sentence.Substring(0, j);
+                
                 if (j != sentence.Length)
                 {
                     yield return new WaitForSeconds(timeBetweenLetters);
@@ -123,6 +130,7 @@ public class DialogueHandler : MonoBehaviour
                     endOfSentence = true;
                 }
                 nextSentence = false;
+                
             }
             while (!nextSentence)
             {
@@ -130,6 +138,7 @@ public class DialogueHandler : MonoBehaviour
                 yield return null;
             }
             endOfSentence = false;
+            yield return null;
         }
         isDone = true;
     }

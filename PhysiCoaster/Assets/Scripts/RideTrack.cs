@@ -31,7 +31,7 @@ public class RideTrack : MonoBehaviour
 
     [Header("Booleans")]
     public bool madeDestination;
-    private bool QKeyPressed;
+    private bool MoveCartButtonPressed;
     private bool offTrack = false;
     private bool paused = false; 
     bool move = false;
@@ -68,8 +68,12 @@ public class RideTrack : MonoBehaviour
     [Header("Images")]
     public Image kineticBar;
     public Image potentialBar;
-    //[HideInInspector]
+
+    [HideInInspector]
     public DialogueHandler duder;
+
+
+    public AudioSource audioSource;
 
     Transform lastTrackPosition;
     Vector3 lastTrackNormal;
@@ -85,6 +89,7 @@ public class RideTrack : MonoBehaviour
     {
         int currentScene = SceneManager.GetActiveScene().buildIndex;
         PlayerPrefs.SetInt("NextLevel", currentScene + 1);
+        audioSource = GetComponent<AudioSource>();
         try
         {
             duder = GameObject.FindGameObjectWithTag("DialogueHandler").GetComponent<DialogueHandler>();
@@ -118,8 +123,6 @@ public class RideTrack : MonoBehaviour
         pauseMenuRestartButtonGameObject.SetActive(false);
         pauseMenuTitleScreenButtonGameObject.SetActive(false);
         resultsScreenButtonGameObject.SetActive(false);
-        
-        Debug.Log("Press Q to move the cart");
         //populate the array with the directions we want to check with raycasts to see if there are blocks in front of us, or below 
         directions = new Vector3[]
         {
@@ -153,49 +156,46 @@ public class RideTrack : MonoBehaviour
         kineticGraphed = new List<Vector2>();
     }
 
-    void Update()
+    public void MoveCart()
     {
-        if (Input.GetKeyDown(KeyCode.Q))
+        MoveCartButtonPressed = true;
+        audioSource.Play();
+        AddToLists();
+    }
+
+    public void PauseMenu()
+    {
+        if (hasDialogue && levelNotCleared && duder.isDoneDone)
         {
-            QKeyPressed = !QKeyPressed;
-            AddToLists();
-            //GetComponent<Rigidbody>().AddForce(transform.right * speed);
-            //GetComponent<Rigidbody>().velocity = transform.right * speed;
-        }
-        if (hasDialogue)
-        {
-            if (Input.GetKeyDown(KeyCode.Escape) && levelNotCleared && duder.isDoneDone)
+            paused = !paused;
+            audioSource.Play();
+            if (paused == true)
             {
-                paused = !paused;
-                Debug.Log("Paused: " + paused);
-                if (paused == true)
-                {
-                    Time.timeScale = 0;
-                    pauseText.enabled = true;
-                    pauseMenuRestartButton.enabled = true;
-                    pauseMenuRestartButtonGameObject.SetActive(true);
-                    pauseMenuTitleScreenButton.enabled = true;
-                    pauseMenuTitleScreenButtonGameObject.SetActive(true);
-                    grid.GetComponent<GridPlacement>().enabled = false;
-                }
-                else
-                {
-                    Time.timeScale = 1;
-                    pauseText.enabled = false;
-                    pauseMenuRestartButton.enabled = false;
-                    pauseMenuRestartButtonGameObject.SetActive(false);
-                    pauseMenuTitleScreenButton.enabled = false;
-                    pauseMenuTitleScreenButtonGameObject.SetActive(false);
-                    grid.GetComponent<GridPlacement>().enabled = true;
-                }
+                Time.timeScale = 0;
+                pauseText.enabled = true;
+                pauseMenuRestartButton.enabled = true;
+                pauseMenuRestartButtonGameObject.SetActive(true);
+                pauseMenuTitleScreenButton.enabled = true;
+                pauseMenuTitleScreenButtonGameObject.SetActive(true);
+                grid.GetComponent<GridPlacement>().enabled = false;
+            }
+            else
+            {
+                Time.timeScale = 1;
+                pauseText.enabled = false;
+                pauseMenuRestartButton.enabled = false;
+                pauseMenuRestartButtonGameObject.SetActive(false);
+                pauseMenuTitleScreenButton.enabled = false;
+                pauseMenuTitleScreenButtonGameObject.SetActive(false);
+                grid.GetComponent<GridPlacement>().enabled = true;
             }
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && levelNotCleared)
+            if (levelNotCleared)
             {
                 paused = !paused;
-                Debug.Log("Paused: " + paused);
+                audioSource.Play();
                 if (paused == true)
                 {
                     Time.timeScale = 0;
@@ -219,12 +219,11 @@ public class RideTrack : MonoBehaviour
             }
         }
     }
-    // Update is called once per frame
     void FixedUpdate()
     {
         velocity -= velocity * Time.deltaTime * coefFriction;
         transform.position += (transform.right * velocity * Time.deltaTime);
-        if (QKeyPressed)
+        if (MoveCartButtonPressed == true)
         {
             TimeForLevel();
             AddToLists();

@@ -11,10 +11,13 @@ public class GridPlacement : MonoBehaviour
     private int currentTrack;
     private bool placeMode;
 
+    public AudioSource audioSource;
+
     void Start()
     {
         placeMode = true;
         currentTrack = 0;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void Update()
@@ -53,13 +56,13 @@ public class GridPlacement : MonoBehaviour
     public void PlaceMode()
     {
         placeMode = true;
-        Debug.Log(placeMode);
+        audioSource.Play();
     }
 
     public void DeleteMode()
     {
         placeMode = false;
-        Debug.Log(placeMode);
+        audioSource.Play();
     }
 
     private void PlaceTrack(Vector3 nearestPoint)

@@ -26,5 +26,20 @@ public class RetryButtonScript : MonoBehaviour
         {
             SceneManager.LoadScene("Level4");
         }
+
+        else if (SceneManager.GetActiveScene().name == "Level5")
+        {
+            SceneManager.LoadScene("Level5");
+        }
+
+        else if (SceneManager.GetActiveScene().name == "Level6")
+        {
+            SceneManager.LoadScene("Level6");
+        }
+
+        else if (SceneManager.GetActiveScene().name == "Level7")
+        {
+            SceneManager.LoadScene("Level7");
+        }
     }
 }

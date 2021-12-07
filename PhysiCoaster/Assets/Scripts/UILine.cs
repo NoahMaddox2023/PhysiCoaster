@@ -78,8 +78,8 @@ public class UILine : Graphic
     private void Start()
     {
         points.Clear();
-        path1 = Application.dataPath + "/PotentialPoints.txt";
-        path2 = Application.dataPath + "/KineticPoints.txt";
+        path1 = Application.streamingAssetsPath + "/PotentialPoints.txt";
+        path2 = Application.streamingAssetsPath + "/KineticPoints.txt";
         ReadFile();
     }
 
@@ -100,18 +100,6 @@ public class UILine : Graphic
         switch (this.gameObject.tag)
         {
             case "KineticEnergy":
-                using (StreamReader sr = File.OpenText(path1))
-                {
-                    string s;
-
-                    while ((s = sr.ReadLine()) != null)
-                    {
-                        string[] halves = s.Split(',');
-                        points.Add(new Vector2(float.Parse(halves[0]) / 2.0f, float.Parse(halves[1]) / 363.75f * 5));
-                    }
-                }
-                    break;
-            case "PotentialEnergy":
                 using (StreamReader sr = File.OpenText(path2))
                 {
                     string s;
@@ -119,7 +107,19 @@ public class UILine : Graphic
                     while ((s = sr.ReadLine()) != null)
                     {
                         string[] halves = s.Split(',');
-                        points.Add(new Vector2(float.Parse(halves[0]) / 2.0f, float.Parse(halves[1]) / 363.75f * 5));
+                        points.Add(new Vector2(float.Parse(halves[0]) / 2.0f, float.Parse(halves[1]) / 450.0f * 5.0f));
+                    }
+                }
+                    break;
+            case "PotentialEnergy":
+                using (StreamReader sr = File.OpenText(path1))
+                {
+                    string s;
+
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        string[] halves = s.Split(',');
+                        points.Add(new Vector2(float.Parse(halves[0]) / 2.0f, float.Parse(halves[1]) / 450.0f * 5.0f));
                     }
                 }
                 break;

@@ -57,7 +57,7 @@ public class RideTrack : MonoBehaviour
     public float realScienceValue;
     private float pointTimer;
     private float failTimer;
-    private float counter;
+    private int counter;
     private int numOfLevels = 10;
 
     private string path1, path2;
@@ -104,7 +104,7 @@ public class RideTrack : MonoBehaviour
         Time.timeScale = 1;
         grid.GetComponent<GridPlacement>().enabled = true;
         time = 0;
-        pointTimer = 1.0f;
+        pointTimer = 0.1f;
         tallestTrackPosition = new Vector3(0, 0, 0);
 
        
@@ -138,8 +138,8 @@ public class RideTrack : MonoBehaviour
         };
         rayTime = 0;
 
-        path1 = Application.dataPath + "/PotentialPoints.txt";
-        path2 = Application.dataPath + "/KineticPoints.txt";
+        path1 = Application.streamingAssetsPath + "/PotentialPoints.txt";
+        path2 = Application.streamingAssetsPath + "/KineticPoints.txt";
 
         if (File.Exists(path1))
         {
@@ -150,10 +150,8 @@ public class RideTrack : MonoBehaviour
         {
             File.Delete(path2);
         }
-
-        counter = 1.0f;
         failTimer = 10.0f;
-
+        counter = 1;
         potentialGraphed = new List<Vector2>();
         kineticGraphed = new List<Vector2>();
     }
@@ -472,10 +470,10 @@ public class RideTrack : MonoBehaviour
 
             if (pointTimer <= 0.0f)
             {
-                potentialGraphed.Add(new Vector2(counter, potential));
-                kineticGraphed.Add(new Vector2(counter, kinetic));
+                potentialGraphed.Add(new Vector2(0.1f * counter, potential));
+                kineticGraphed.Add(new Vector2(0.1f * counter, kinetic));
                 counter++;
-                pointTimer = 1.0f;
+                pointTimer = 0.1f;
             }
         } else if (!levelNotCleared)
         {

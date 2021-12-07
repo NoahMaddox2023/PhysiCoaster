@@ -25,6 +25,7 @@ public class LevelLoadManager : MonoBehaviour
         }
         catch (FileNotFoundException fnfe)
         {
+            Directory.CreateDirectory(Application.streamingAssetsPath);
             using (StreamWriter sw = new StreamWriter(Application.streamingAssetsPath + "/SavedLevels.txt"))
             {
                 sw.Write("True\nFalse\nFalse\nFalse\nFalse\nFalse\nFalse\nFalse\nFalse\nFalse");

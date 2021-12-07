@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.IO;
+using System;
 
 public class RideTrack : MonoBehaviour
 {
@@ -57,6 +58,7 @@ public class RideTrack : MonoBehaviour
     private float pointTimer;
     private float failTimer;
     private float counter;
+    private int numOfLevels = 10;
 
     private string path1, path2;
 
@@ -256,6 +258,60 @@ public class RideTrack : MonoBehaviour
             resultsScreenButton.enabled = true;
             resultsScreenButtonGameObject.SetActive(true);
             grid.GetComponent<GridPlacement>().enabled = false;
+            try
+            {
+                bool[] completedLevels;
+                using (StreamReader sr = new StreamReader(Application.streamingAssetsPath + "/SavedLevels.txt"))
+                {
+                    string s = "";
+                    string temp = sr.ReadToEnd();
+                    Debug.Log(temp);
+                    Debug.Log("Temp.length: " + temp.Length);
+                    string[] allLevels = temp.Split('\n');
+                    completedLevels = new bool[allLevels.Length];
+                    for (int i = 0; i < completedLevels.Length; i++)
+                    {
+                        Debug.Log(allLevels[i] + " vs " + true + " vs " + false);
+                        completedLevels[i] = Convert.ToBoolean(allLevels[i]);
+                        s += completedLevels[i] + ",";
+                    }
+                    Debug.Log(s);
+                    sr.Close();
+                }
+                using (StreamWriter sw = new StreamWriter(Application.streamingAssetsPath + "/SavedLevels.txt"))
+                {
+                    string s = "";
+                    for (int i = 5; i < 5 + numOfLevels; i++)
+                    {
+                        if (SceneManager.GetActiveScene().buildIndex == i)
+                        {
+                            completedLevels[i - 5] = true;
+                        }
+                        //s += completedLevels[i] + ",";
+                        if (i - 5 != numOfLevels - 1)
+                            sw.Write(completedLevels[i - 5] + "\n");
+                        else
+                            sw.Write(completedLevels[i - 5]);
+                    }
+                    sw.Close();
+                }
+            }
+            catch (FileNotFoundException fnfe)
+            {
+                using (StreamWriter sw = new StreamWriter(Application.streamingAssetsPath + "/SavedLevels.txt"))
+                {
+                    for (int i = 0; i < numOfLevels; i++)
+                    {
+                        if (i == 0)
+                            sw.Write(true + "\n");
+                        else if (i != numOfLevels - 1)
+                            sw.Write(false + "\n");
+                        else
+                            sw.Write(false);
+                    }
+                    sw.Close();
+                }
+            }
             SetData();
         }
         else if (other.gameObject.tag == "FailTrigger")

@@ -32,7 +32,10 @@ public class LevelLoadManager : MonoBehaviour
             }
             for (int i = 0; i < 10; i++)
             {
-                canPlay[i] = false;
+                if (i == 0)
+                    canPlay[i] = true;
+                else
+                    canPlay[i] = false;
             }
         }
         for (int i = 0; i < 10; i++)
